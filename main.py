@@ -1,6 +1,6 @@
 # bot.py
 import os
-from test import dayGenerator
+from test import updateHolidays
 
 import discord
 from dotenv import load_dotenv
@@ -16,15 +16,20 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 
-messageTime = datetime.time(hour=3, minute=39)
+messageTime = datetime.time(hour=2) #utc is default #10AM EST
 
-@tasks.loop(time=messageTime)
+@tasks.loop(seconds=10)
 async def NationalDaySend():
-    print('here')
-    channel = client.get_channel(1154241704430415893)
+    #print('here')
+    channel = client.get_channel(int(CHANNEL))
     print(channel)
-    days = dayGenerator()
-    await channel.send(days)
+    days = updateHolidays()
+    #await channel.send(f"## Here are the holidays for today!  \n **{days[0]} \n {days[1]} \n {days[2]}**")
+    embed = discord.Embed(title="Here Are The Fun Holidays For Today")
+    embed.set_author(name="silly holiday bot :D")
+    for holiday in days:
+        embed.add_field(name='\n', value=f'{holiday}\n', inline=False)
+    await channel.send(embed=embed)
     print('working!!')
 
 @client.event
