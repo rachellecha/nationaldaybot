@@ -17,5 +17,5 @@ def dayGenerator():
             days.append(name.text)
             #print(name.text) 
 
-    print(days)
+    #print(days)
     return days
