@@ -10,6 +10,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
 #webscrape to get all the silly holidays per day!
+#returns all the holidays as a list
 def dayGenerator():
     URL = 'https://www.holidaycalendar.io/what-holiday-is-today'
     page = requests.get(URL)
@@ -24,14 +25,11 @@ def dayGenerator():
         name = a.find("h3", class_="card-link-title---hover-secondary-1 display-4 mg-bottom-2px")
         if "Day" in name.text:
             days.append(name.text)
-            #print(name.text) 
-
-    #print(days)
-    #days.append("National Thumbs Up Bread Day")
     return days
 
 #get the keywords of the holidays
-# some nouns are 2 words... need fix
+#filters out the stopwords
+#{keyword:full holiday name}
 def getKeyWords():
     days = dayGenerator()
     stopwords = ['world', 'national', 'day', 'international', 'of', "’", 's', 'awareness']
@@ -41,13 +39,12 @@ def getKeyWords():
         words = word_tokenize(day)
         for w in words:
             if w.lower().strip() not in stopwords:
-                #print(w)
                 filtered_list[w] = day
 
     return filtered_list
 
-#potentially find and emoji that corresponds to that keyword
-#reutrns a dictionary with Keyword:Emoji Symbol
+#finds all the emojis that match the keyword
+#returns a dictionary with {Keyword:Emoji Symbol}
 def getEmoji():
     words = getKeyWords()
     emoji_dict = {}
@@ -59,8 +56,8 @@ def getEmoji():
     return emoji_dict
 
 #update the name of the holidays to include the emoji
+#returns a dictionary list with all the holidays including the emojis
 def updateHolidays():
-    #days = dayGenerator()
     keywords = getKeyWords()
     emojis = getEmoji()
 
@@ -70,7 +67,7 @@ def updateHolidays():
    # the pecan cookie day : _ _
 
     for key in keywords: #{keyword: full holiday name}
-        if key in emojis: #{keyword: emoji}
+        if key in emojis: #{keyword: emojis}
             if keywords[key] in test:
                 test[keywords[key]] = test[keywords[key]] + " " + emojis[key] + " "
             else:

@@ -1,41 +1,52 @@
-# bot.py
+# import libraries
 import os
-from test import updateHolidays
-
-import discord
 from dotenv import load_dotenv
+
+#discord stuff
+import discord
 from discord.ext import tasks
+
+#datetime import
 import datetime
 
+#functions to actually do the work
+from modules import updateHolidays
+
+
+#environment variables
 load_dotenv()
 TOKEN = os.getenv('DISC_TOKEN')
 CHANNEL = os.getenv('DISC_CHANNEL')
-print(CHANNEL)
+#print(CHANNEL)
 
+#create the discord bot
 intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 
-messageTime = datetime.time(hour=14) #utc is default #10AM EST
+#time the message will send
+#utc is default #10AM EST
+messageTime = datetime.time(hour=14) 
 
+
+#method to send all the holidays in discord channel at the specified time
 @tasks.loop(time=messageTime)
 async def NationalDaySend():
-    #print('here')
     channel = client.get_channel(int(CHANNEL))
-    print(channel)
+    #print(channel)
     days = updateHolidays()
-    #await channel.send(f"## Here are the holidays for today!  \n **{days[0]} \n {days[1]} \n {days[2]}**")
     embed = discord.Embed(title="Here Are The Fun Holidays For Today")
     for holiday in days:
         embed.add_field(name='\n', value=f'{holiday}\n', inline=False)
     await channel.send(embed=embed)
-    print('working!!')
+    #print('working!!')
 
+#runs when the client runs
 @client.event
 async def on_ready():
     if not NationalDaySend.is_running():
         NationalDaySend.start()
-        print("started")
+        #print("started")
 
  
 client.run(TOKEN)
