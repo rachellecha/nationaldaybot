@@ -27,7 +27,7 @@ def dayGenerator():
             #print(name.text) 
 
     #print(days)
-    days.append("National Thumbs Up Bread Day")
+    #days.append("National Thumbs Up Bread Day")
     return days
 
 #get the keywords of the holidays
@@ -68,7 +68,6 @@ def updateHolidays():
     test = {}
 
    # the pecan cookie day : _ _
-
 
     for key in keywords: #{keyword: full holiday name}
         if key in emojis: #{keyword: emoji}

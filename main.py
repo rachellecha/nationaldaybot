@@ -16,9 +16,9 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 
-messageTime = datetime.time(hour=2) #utc is default #10AM EST
+messageTime = datetime.time(hour=14) #utc is default #10AM EST
 
-@tasks.loop(seconds=10)
+@tasks.loop(time=messageTime)
 async def NationalDaySend():
     #print('here')
     channel = client.get_channel(int(CHANNEL))
@@ -26,7 +26,6 @@ async def NationalDaySend():
     days = updateHolidays()
     #await channel.send(f"## Here are the holidays for today!  \n **{days[0]} \n {days[1]} \n {days[2]}**")
     embed = discord.Embed(title="Here Are The Fun Holidays For Today")
-    embed.set_author(name="silly holiday bot :D")
     for holiday in days:
         embed.add_field(name='\n', value=f'{holiday}\n', inline=False)
     await channel.send(embed=embed)
