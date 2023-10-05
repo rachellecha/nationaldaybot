@@ -9,6 +9,18 @@ nltk.download('punkt')
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
+from transformers import pipeline
+
+def summ(convo):
+    summarizer = pipeline("summarization", model="knkarthick/MEETING_SUMMARY")
+    text = ""
+    for words in convo:
+        text = text + " " + words + " "
+    print(text)
+    result = summarizer(text)
+    return result[0]['summary_text']
+
+
 #webscrape to get all the silly holidays per day!
 #returns all the holidays as a list
 def dayGenerator():
